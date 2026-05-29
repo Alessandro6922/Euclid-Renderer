@@ -6,7 +6,7 @@
 
 int main() {
 	WindowManager winManager(1600, 1200, "Euclid Renderer");
-	VulkanInterface vkInterface;
+	VulkanInterface vkInterface(&winManager);
 
 	while (!glfwWindowShouldClose(winManager.getWindowPointer())) {
 		//vkDeviceWaitIdle();

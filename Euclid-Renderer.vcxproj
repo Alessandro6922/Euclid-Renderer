@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\Constants.h" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\WindowManager.cpp" />
     <ClCompile Include="Src\VulkanInterface.cpp" />

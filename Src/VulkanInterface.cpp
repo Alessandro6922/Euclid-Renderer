@@ -1,8 +1,10 @@
 #include "VulkanInterface.h"
 
-VulkanInterface::VulkanInterface()
+VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager(windowManagerIn)
 {
 	createInstance();
+	setupDebugMessenger();
+	windowManager->createWindowSurface(vulkanInstance, surface);
 }
 
 VulkanInterface::~VulkanInterface()
@@ -105,4 +107,50 @@ void VulkanInterface::createInstance()
 	if (vkCreateInstance(&createInfo, nullptr, &vulkanInstance) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create instance!");
 	}
+}
+
+VkResult VulkanInterface::CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+{
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+	if (func != nullptr) {
+		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
+	}
+	else {
+		return VK_ERROR_EXTENSION_NOT_PRESENT;
+	}
+}
+
+void VulkanInterface::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+{
+	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+	if (func != nullptr) {
+		func(instance, debugMessenger, pAllocator);
+	}
+}
+
+void VulkanInterface::setupDebugMessenger()
+{
+	if (!enableValidationLayers) return;
+
+	VkDebugUtilsMessengerCreateInfoEXT createInfo;
+	populateDebugMessengerCreateInfo(createInfo);
+
+
+	if (CreateDebugUtilsMessengerEXT(vulkanInstance, &createInfo, nullptr, &debugMessenger) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to set up debug messenger!");
+	}
+}
+
+void VulkanInterface::createSurface()
+{
+
+}
+
+bool VulkanInterface::isDeviceSuitable(VkPhysicalDevice device)
+{
+	return false;
+}
+
+void VulkanInterface::pickPhysicalDevice()
+{
 }
