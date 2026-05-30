@@ -13,7 +13,7 @@ public:
 	~WindowManager();
 
 	void setFrameBufferResized(bool isResized);
-	void createWindowSurface(VkInstance instance, VkSurfaceKHR surface);
+	void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 	GLFWwindow* getWindowPointer();
 

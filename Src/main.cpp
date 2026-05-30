@@ -1,4 +1,4 @@
-
+#pragma once
 #define GLFW_INCLUE_VULKAN
 
 #include "WindowManager.h"
