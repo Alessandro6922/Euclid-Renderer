@@ -6,6 +6,8 @@ VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager
 	setupDebugMessenger();
 	windowManager->createWindowSurface(vulkanInstance, &surface);
 	pickPhysicalDevice();
+	createLogicalDevice();
+	loadExtentionFunctions();
 }
 
 VulkanInterface::~VulkanInterface()
@@ -293,5 +295,95 @@ void VulkanInterface::pickPhysicalDevice()
 
 	if (physicalDevice == VK_NULL_HANDLE) {
 		throw std::runtime_error("Failed to find a suitable GPU!");
+	}
+}
+
+void VulkanInterface::createLogicalDevice()
+{
+	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+	std::set<uint32_t> uniqueQueueFamilies = { queueFamilyIndices.graphicsFamilyIndex.value(), queueFamilyIndices.computeFamilyIndex.value(), queueFamilyIndices.computeFamilyIndex.value() };
+
+	float queuePriority = 1.0f;
+
+	for (uint32_t queueFamily : uniqueQueueFamilies) {
+		VkDeviceQueueCreateInfo queueCreateInfo{};
+		queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+		queueCreateInfo.queueFamilyIndex = queueFamily;
+		queueCreateInfo.queueCount = 1;
+		queueCreateInfo.pQueuePriorities = &queuePriority;
+		queueCreateInfos.push_back(queueCreateInfo);
+	}
+
+	VkPhysicalDeviceFeatures deviceFeatures{};
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
+	deviceFeatures.fillModeNonSolid = VK_TRUE;
+
+	VkPhysicalDeviceMaintenance4Features maintenance4Features{};
+	maintenance4Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_4_FEATURES;
+	maintenance4Features.maintenance4 = VK_TRUE;
+
+	VkPhysicalDeviceMeshShaderFeaturesEXT meshFeatures{};
+	meshFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MESH_SHADER_FEATURES_EXT;
+	meshFeatures.meshShader = VK_TRUE;
+	meshFeatures.taskShader = VK_TRUE;
+	meshFeatures.pNext = &maintenance4Features;
+
+	VkPhysicalDeviceFeatures2 deviceFeatures2{};
+	deviceFeatures2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+	deviceFeatures2.features = deviceFeatures;
+	deviceFeatures2.pNext = &meshFeatures;
+
+	VkPhysicalDeviceExtendedDynamicState3FeaturesEXT dynamicState3Features{};
+	dynamicState3Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_3_FEATURES_EXT;
+	dynamicState3Features.extendedDynamicState3PolygonMode = VK_TRUE;
+	dynamicState3Features.pNext = &deviceFeatures2;
+
+	VkPhysicalDeviceVulkan11Features vulkan11Features{};
+	vulkan11Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+	vulkan11Features.shaderDrawParameters = VK_TRUE;
+	vulkan11Features.pNext = &dynamicState3Features;
+
+	VkPhysicalDeviceBufferDeviceAddressFeatures bufferDeviceAddressFeatures{};
+	bufferDeviceAddressFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_BUFFER_DEVICE_ADDRESS_FEATURES;
+	bufferDeviceAddressFeatures.bufferDeviceAddress = VK_TRUE;
+	bufferDeviceAddressFeatures.pNext = &vulkan11Features;
+
+	VkPhysicalDeviceTimelineSemaphoreFeatures timelineSemaphoreFeatures{};
+	timelineSemaphoreFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TIMELINE_SEMAPHORE_FEATURES;
+	timelineSemaphoreFeatures.timelineSemaphore = VK_TRUE;
+	timelineSemaphoreFeatures.pNext = &bufferDeviceAddressFeatures;
+
+	VkDeviceCreateInfo createInfo{};
+	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+	createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+	createInfo.pQueueCreateInfos = queueCreateInfos.data();
+	createInfo.pEnabledFeatures = nullptr;
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(DEVICE_EXTENSIONS.size());
+	createInfo.ppEnabledExtensionNames = DEVICE_EXTENSIONS.data();
+	createInfo.pNext = &timelineSemaphoreFeatures;
+
+	if (ENABLE_VALIDATION_LAYERS) {
+		createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
+		createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
+	}
+	else {
+		createInfo.enabledLayerCount = 0;
+	}
+
+	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) {
+		throw std::runtime_error("Failed to create logical device!");
+	}
+
+	vkGetDeviceQueue(device, queueFamilyIndices.graphicsFamilyIndex.value(), 0, &graphicsQueue);
+	vkGetDeviceQueue(device, queueFamilyIndices.presentationFamilyIndex.value(), 0, &presentationQueue);
+	vkGetDeviceQueue(device, queueFamilyIndices.computeFamilyIndex.value(), 0, &computeQueue);
+}
+
+void VulkanInterface::loadExtentionFunctions()
+{
+	cmdSetPolygonModeEXT = (PFN_vkCmdSetPolygonModeEXT)vkGetDeviceProcAddr(device, "vkCmdSetPolygonModeEXT");
+
+	if (!cmdSetPolygonModeEXT) {
+		throw std::runtime_error("Failed to load setPolygonMode");
 	}
 }

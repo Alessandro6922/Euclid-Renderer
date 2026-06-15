@@ -1,9 +1,3 @@
-/*
-	TODO:	Implement a gpu selection menu
-			Force multiple queue families, or look into whether thats worth doing
-*/
-
-
 #pragma once
 
 #include "GLFW/glfw3.h"
@@ -40,12 +34,23 @@ private:
 
 	void setupDebugMessenger();
 
+////////////////////////////////////////////////////////////////////////////////////
+// TODO:	Implement a gpu selection menu
+// 			Force multiple queue families, or look into whether thats worth doing
+////////////////////////////////////////////////////////////////////////////////////
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 	bool checkDeviceExtensionSupprt(VkPhysicalDevice device);
 	bool isDeviceSuitable(VkPhysicalDevice device);
 	SwapChainSupprtDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkSampleCountFlagBits getMaxUsableSampleCount();
 	void pickPhysicalDevice();
+
+////////////////////////////////////////////////////////////////////////////////////
+// TODO:	Refactor pNext chain creation
+////////////////////////////////////////////////////////////////////////////////////
+	void createLogicalDevice();
+
+	void loadExtentionFunctions();
 
 	WindowManager* windowManager;
 
@@ -57,5 +62,13 @@ private:
 	VkSampleCountFlagBits maxMSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
 	QueueFamilyIndices queueFamilyIndices;
+
+	VkDevice device;
+
+	VkQueue graphicsQueue;
+	VkQueue presentationQueue;
+	VkQueue computeQueue;
+
+	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT = NULL;
 };
 
