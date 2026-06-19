@@ -3,7 +3,7 @@
 #include "vulkan/vulkan.h"
 #include <vector>
 
-struct SwapChainSupprtDetails {
+struct SwapChainSupportDetails {
 	VkSurfaceCapabilitiesKHR surfaceCapabilities;
 	std::vector<VkSurfaceFormatKHR> formats;
 	std::vector<VkPresentModeKHR> presentModes;

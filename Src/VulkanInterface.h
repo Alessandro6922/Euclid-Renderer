@@ -5,12 +5,12 @@
 
 #include "Constants.h"
 #include "WindowManager.h"
-#include "QueueFamilyIndices.h"
-#include "SwapChainSupportDetails.h"
+#include "instanceStructs.h"
 
 #include <vector>
 #include <stdexcept>
 #include <set>
+#include <algorithm>
 
 #ifdef _DEBUG
 #include <iostream>
@@ -41,7 +41,7 @@ private:
 	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 	bool checkDeviceExtensionSupprt(VkPhysicalDevice device);
 	bool isDeviceSuitable(VkPhysicalDevice device);
-	SwapChainSupprtDetails querySwapChainSupport(VkPhysicalDevice device);
+	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkSampleCountFlagBits getMaxUsableSampleCount();
 	void pickPhysicalDevice();
 
@@ -51,6 +51,14 @@ private:
 	void createLogicalDevice();
 
 	void loadExtentionFunctions();
+
+	////////////////////////////////////////////////////////////////////////////////////
+	// TODO:	Finish implementation
+	////////////////////////////////////////////////////////////////////////////////////
+	void createSwapChain();
+	VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 	WindowManager* windowManager;
 
@@ -68,6 +76,13 @@ private:
 	VkQueue graphicsQueue;
 	VkQueue presentationQueue;
 	VkQueue computeQueue;
+
+	VkPresentModeKHR presentMode;
+
+	VkSwapchainKHR swapChain;
+	swapChainImages swapChainImages;
+
+	uint32_t imageCount;
 
 	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT = NULL;
 };

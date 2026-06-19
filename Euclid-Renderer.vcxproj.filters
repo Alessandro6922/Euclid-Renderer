@@ -30,6 +30,9 @@
     <ClCompile Include="Src\QueueFamilyIndices.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\InstanceStructs.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\WindowManager.h">
