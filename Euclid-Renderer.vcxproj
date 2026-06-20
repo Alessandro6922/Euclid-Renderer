@@ -19,17 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\QueueManager.cpp" />
     <ClCompile Include="Src\Constants.h" />
     <ClCompile Include="Src\InstanceStructs.h" />
     <ClCompile Include="Src\main.cpp" />
     <ClCompile Include="Src\QueueFamilyIndices.h" />
     <ClCompile Include="Src\WindowManager.cpp" />
     <ClCompile Include="Src\VulkanInterface.cpp" />
+    <ClCompile Include="Src\SwapChainManager.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\SwapChainSupportDetails.h" />
+    <ClInclude Include="Src\QueueManager.h" />
     <ClInclude Include="Src\WindowManager.h" />
     <ClInclude Include="Src\VulkanInterface.h" />
+    <ClInclude Include="Src\SwapChainManager.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -6,11 +6,12 @@
 #include "Constants.h"
 #include "WindowManager.h"
 #include "instanceStructs.h"
+#include "SwapChainManager.h"
+#include "QueueManager.h"
 
 #include <vector>
 #include <stdexcept>
 #include <set>
-#include <algorithm>
 
 #ifdef _DEBUG
 #include <iostream>
@@ -38,10 +39,8 @@ private:
 // TODO:	Implement a gpu selection menu
 // 			Force multiple queue families, or look into whether thats worth doing
 ////////////////////////////////////////////////////////////////////////////////////
-	QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
 	bool checkDeviceExtensionSupprt(VkPhysicalDevice device);
 	bool isDeviceSuitable(VkPhysicalDevice device);
-	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice device);
 	VkSampleCountFlagBits getMaxUsableSampleCount();
 	void pickPhysicalDevice();
 
@@ -55,12 +54,9 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////
 	// TODO:	Finish implementation
 	////////////////////////////////////////////////////////////////////////////////////
-	void createSwapChain();
-	VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
-	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
-	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
 
 	WindowManager* windowManager;
+	SwapChainManager* swapChainManager;
 
 	VkInstance vulkanInstance;
 	VkDebugUtilsMessengerEXT debugMessenger;
@@ -69,6 +65,7 @@ private:
 
 	VkSampleCountFlagBits maxMSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
+	QueueManager queueManager;
 	QueueFamilyIndices queueFamilyIndices;
 
 	VkDevice device;
@@ -76,13 +73,6 @@ private:
 	VkQueue graphicsQueue;
 	VkQueue presentationQueue;
 	VkQueue computeQueue;
-
-	VkPresentModeKHR presentMode;
-
-	VkSwapchainKHR swapChain;
-	swapChainImages swapChainImages;
-
-	uint32_t imageCount;
 
 	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT = NULL;
 };

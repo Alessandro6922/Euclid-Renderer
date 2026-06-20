@@ -31,15 +31,3 @@ struct SwapChainSupportDetails {
 	std::vector<VkSurfaceFormatKHR> formats;
 	std::vector<VkPresentModeKHR> presentModes;
 };
-
-struct swapChainImage {
-	VkImage image;
-	VkImageView imageView;
-};
-
-struct swapChainImages {
-	std::vector<swapChainImage> imageViews;
-
-	VkFormat swapChainImageFormat;
-	VkExtent2D swapChainExtent;
-};

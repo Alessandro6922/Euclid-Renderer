@@ -33,6 +33,12 @@
     <ClCompile Include="Src\InstanceStructs.h">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Src\SwapChainManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\QueueManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\WindowManager.h">
@@ -41,7 +47,10 @@
     <ClInclude Include="Src\VulkanInterface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Src\SwapChainSupportDetails.h">
+    <ClInclude Include="Src\SwapChainManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\QueueManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
