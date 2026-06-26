@@ -1,6 +1,6 @@
 #include "VulkanInterface.h"
 
-VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager(windowManagerIn)
+VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager(windowManagerIn), swapChainManager(&device, &physicalDevice, &surface, windowManager), queueManager(&device, &physicalDevice, &surface)
 {
 	createInstance();
 	setupDebugMessenger();
@@ -8,6 +8,7 @@ VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager
 	pickPhysicalDevice();
 	createLogicalDevice();
 	loadExtentionFunctions();
+	swapChainManager.createSwapChain(*queueManager.getQueueFamilyIndices());
 }
 
 VulkanInterface::~VulkanInterface()
@@ -172,21 +173,21 @@ bool VulkanInterface::checkDeviceExtensionSupprt(VkPhysicalDevice device)
 	return requiredExtensions.empty();
 }
 
-bool VulkanInterface::isDeviceSuitable(VkPhysicalDevice device)
+bool VulkanInterface::isDeviceSuitable(VkPhysicalDevice physicalDevice)
 {
 	queueManager.getQueueFamilyIndices()->Clear();
-	queueFamilyIndices = queueManager.findQueueFamilies(device);
+	queueFamilyIndices = queueManager.findQueueFamilies(physicalDevice);
 
-	bool extensionsSupported = checkDeviceExtensionSupprt(device);
+	bool extensionsSupported = checkDeviceExtensionSupprt(physicalDevice);
 
 	bool swapChainAdequate = false;
 	if (extensionsSupported) {
-		SwapChainSupportDetails swapChainSupport = swapChainManager->querySwapChainSupport(device, surface);
+		SwapChainSupportDetails swapChainSupport = swapChainManager.querySwapChainSupport(physicalDevice);
 		swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 	}
 
 	VkPhysicalDeviceFeatures supportedFeatures;
-	vkGetPhysicalDeviceFeatures(device, &supportedFeatures);
+	vkGetPhysicalDeviceFeatures(physicalDevice, &supportedFeatures);
 
 	return queueFamilyIndices.IsComplete() && extensionsSupported && swapChainAdequate && supportedFeatures.samplerAnisotropy;
 }
@@ -321,6 +322,8 @@ void VulkanInterface::loadExtentionFunctions()
 	cmdSetPolygonModeEXT = (PFN_vkCmdSetPolygonModeEXT)vkGetDeviceProcAddr(device, "vkCmdSetPolygonModeEXT");
 
 	if (!cmdSetPolygonModeEXT) {
+		std::cout << "error line\n";
 		throw std::runtime_error("Failed to load setPolygonMode");
 	}
+
 }

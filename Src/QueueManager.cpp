@@ -1,6 +1,6 @@
 #include "QueueManager.h"
 
-QueueManager::QueueManager(VkDevice* inDevice = nullptr, VkPhysicalDevice* inPhysicalDevice = nullptr, VkSurfaceKHR* inSurface = nullptr) : device(inDevice), physicalDevice(inPhysicalDevice), surface(inSurface)
+QueueManager::QueueManager(VkDevice* inDevice, VkPhysicalDevice* inPhysicalDevice, VkSurfaceKHR* inSurface) : device(inDevice), physicalDevice(inPhysicalDevice), surface(inSurface)
 {
 }
 

@@ -13,10 +13,11 @@
 #include <stdexcept>
 #include <set>
 
-#ifdef _DEBUG
-#include <iostream>
-#endif
-
+/// <summary>
+/// TODO:
+/// Port everything over
+/// Finish deconstructor
+/// </summary>
 class VulkanInterface
 {
 public:
@@ -56,7 +57,8 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////
 
 	WindowManager* windowManager;
-	SwapChainManager* swapChainManager;
+	SwapChainManager swapChainManager;
+	QueueManager queueManager;
 
 	VkInstance vulkanInstance;
 	VkDebugUtilsMessengerEXT debugMessenger;
@@ -65,7 +67,6 @@ private:
 
 	VkSampleCountFlagBits maxMSAASamples = VK_SAMPLE_COUNT_1_BIT;
 
-	QueueManager queueManager;
 	QueueFamilyIndices queueFamilyIndices;
 
 	VkDevice device;
@@ -74,6 +75,6 @@ private:
 	VkQueue presentationQueue;
 	VkQueue computeQueue;
 
-	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT = NULL;
+	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT;
 };
 

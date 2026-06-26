@@ -8,24 +8,24 @@
 #include <stdexcept>
 
 /// <summary>
-/// Finish implementation
-/// possibly rework constructors
+/// TODO:
+/// Create Image Views
+/// Finish deconstructor
 /// </summary>
 class SwapChainManager
 {
-private:
+public:
 	SwapChainManager(VkDevice* device, VkPhysicalDevice* physicalDevice, VkSurfaceKHR* surface, WindowManager* windowManager);
 	~SwapChainManager();
 
-public:
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice inPhysicalDevice);
+
+	void createSwapChain(QueueFamilyIndices queueFamilyIndices);
 
 private:
 	VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
 	VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 	VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
-
-	void createSwapChain();
 
 private:
 	VkDevice* device;

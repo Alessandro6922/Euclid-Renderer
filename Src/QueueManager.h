@@ -5,8 +5,8 @@
 
 
 /// <summary>
-/// Finish implementation
-/// possibly rework constructors
+/// TODO:
+/// Finish Deconstructor
 /// </summary>
 class QueueManager
 {

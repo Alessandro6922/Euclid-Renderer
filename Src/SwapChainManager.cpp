@@ -7,7 +7,7 @@ SwapChainManager::SwapChainManager(VkDevice* inDevice, VkPhysicalDevice* inPhysi
 
 SwapChainManager::~SwapChainManager()
 {
-
+	vkDestroySwapchainKHR(*device, swapChain, nullptr);
 }
 
 SwapChainSupportDetails SwapChainManager::querySwapChainSupport(VkPhysicalDevice inPhysicalDevice)
@@ -35,7 +35,7 @@ SwapChainSupportDetails SwapChainManager::querySwapChainSupport(VkPhysicalDevice
 	return details;
 }
 
-void SwapChainManager::createSwapChain()
+void SwapChainManager::createSwapChain(QueueFamilyIndices queueFamilyIndices)
 {
 	SwapChainSupportDetails swapChainSupport = querySwapChainSupport(*physicalDevice);
 
@@ -78,6 +78,9 @@ void SwapChainManager::createSwapChain()
 
 	if (vkCreateSwapchainKHR(*device, &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
 		throw std::runtime_error("Failed to create swap chain!");
+	}
+	else {
+		std::cout << "Created Swapchain!\n";
 	}
 
 	vkGetSwapchainImagesKHR(*device, swapChain, &imageCount, nullptr);
