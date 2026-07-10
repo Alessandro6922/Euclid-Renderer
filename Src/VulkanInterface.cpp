@@ -9,6 +9,7 @@ VulkanInterface::VulkanInterface(WindowManager* windowManagerIn) : windowManager
 	createLogicalDevice();
 	loadExtentionFunctions();
 	swapChainManager.createSwapChain(*queueManager.getQueueFamilyIndices());
+	swapChainManager.createSwapChainImageViews();
 }
 
 VulkanInterface::~VulkanInterface()
@@ -291,6 +292,11 @@ void VulkanInterface::createLogicalDevice()
 	timelineSemaphoreFeatures.timelineSemaphore = VK_TRUE;
 	timelineSemaphoreFeatures.pNext = &bufferDeviceAddressFeatures;
 
+	VkPhysicalDeviceDynamicRenderingFeaturesKHR dynamicRenderingFeatures{};
+	dynamicRenderingFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DYNAMIC_RENDERING_FEATURES_KHR;
+	dynamicRenderingFeatures.dynamicRendering = VK_TRUE;
+	dynamicRenderingFeatures.pNext = &timelineSemaphoreFeatures;
+
 	VkDeviceCreateInfo createInfo{};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
@@ -298,7 +304,7 @@ void VulkanInterface::createLogicalDevice()
 	createInfo.pEnabledFeatures = nullptr;
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(DEVICE_EXTENSIONS.size());
 	createInfo.ppEnabledExtensionNames = DEVICE_EXTENSIONS.data();
-	createInfo.pNext = &timelineSemaphoreFeatures;
+	createInfo.pNext = &dynamicRenderingFeatures;
 
 	if (ENABLE_VALIDATION_LAYERS) {
 		createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
@@ -319,11 +325,13 @@ void VulkanInterface::createLogicalDevice()
 
 void VulkanInterface::loadExtentionFunctions()
 {
-	cmdSetPolygonModeEXT = (PFN_vkCmdSetPolygonModeEXT)vkGetDeviceProcAddr(device, "vkCmdSetPolygonModeEXT");
+	vkCmdSetPolygonModeEXT = (PFN_vkCmdSetPolygonModeEXT)vkGetDeviceProcAddr(device, "vkCmdSetPolygonModeEXT");
 
-	if (!cmdSetPolygonModeEXT) {
-		std::cout << "error line\n";
-		throw std::runtime_error("Failed to load setPolygonMode");
+	vkCmdBeginRenderingKHR = (PFN_vkCmdBeginRenderingKHR)vkGetInstanceProcAddr(vulkanInstance, "vkCmdBeginRenderingKHR");
+
+	vkCmdEndRenderingKHR = (PFN_vkCmdEndRenderingKHR)vkGetInstanceProcAddr(vulkanInstance, "vkCmdEndRenderingKHR");
+
+	if (!vkCmdSetPolygonModeEXT || !vkCmdBeginRenderingKHR || !vkCmdEndRenderingKHR) {
+		throw std::runtime_error("Failed to load extension functions");
 	}
-
 }

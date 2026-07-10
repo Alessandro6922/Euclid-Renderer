@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "InstanceStructs.h"
 #include "WindowManager.h"
+#include "AssetHelper.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -21,6 +22,7 @@ public:
 	SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice inPhysicalDevice);
 
 	void createSwapChain(QueueFamilyIndices queueFamilyIndices);
+	void createSwapChainImageViews();
 
 private:
 	VkSurfaceFormatKHR chooseSwapChainSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);

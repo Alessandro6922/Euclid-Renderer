@@ -75,6 +75,8 @@ private:
 	VkQueue presentationQueue;
 	VkQueue computeQueue;
 
-	PFN_vkCmdSetPolygonModeEXT cmdSetPolygonModeEXT;
+	PFN_vkCmdSetPolygonModeEXT vkCmdSetPolygonModeEXT;
+	PFN_vkCmdBeginRenderingKHR vkCmdBeginRenderingKHR;
+	PFN_vkCmdEndRenderingKHR vkCmdEndRenderingKHR;
 };
 

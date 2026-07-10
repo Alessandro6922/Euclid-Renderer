@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Src\PipelineManager.cpp" />
+    <ClCompile Include="Src\AssetHelper.cpp" />
     <ClCompile Include="Src\QueueManager.cpp" />
     <ClCompile Include="Src\Constants.h" />
     <ClCompile Include="Src\InstanceStructs.h" />
@@ -29,6 +31,8 @@
     <ClCompile Include="Src\SwapChainManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\PipelineManager.h" />
+    <ClInclude Include="Src\AssetHelper.h" />
     <ClInclude Include="Src\QueueManager.h" />
     <ClInclude Include="Src\WindowManager.h" />
     <ClInclude Include="Src\VulkanInterface.h" />
